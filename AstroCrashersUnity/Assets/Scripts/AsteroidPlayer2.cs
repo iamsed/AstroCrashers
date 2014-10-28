@@ -1,35 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AsteroidPlayer2 : MonoBehaviour {
-
-	public float accelerationForce = 10f;
-	public float rotationForce = 3f;
-	public float teleportDistance = 5.0f;
-	public GameObject TeleportMarker;
-
-	public LaserBeam beamPrefab;
+public class AsteroidPlayer2 : AsteroidPlayer {
 	
-	public float shootCooldown = 0.1f;
-	float _cooldown;
-
-	public float markerSpeed = 5.0f;
-	
-	public float maxSpeed = 10.0f;
-	
-	
-	private float _rotation;
-
-
-	void FireBeam()
-	{
-		var beam = GameObject.Instantiate (beamPrefab) as LaserBeam;
-		beam.transform.position = transform.position + transform.right * 1.5f;
-		beam.transform.rotation = transform.rotation;
-		
-		beam.Fire ();
-		_cooldown = shootCooldown;
-	}
 
 	void Update () 
 	{
@@ -70,46 +43,12 @@ public class AsteroidPlayer2 : MonoBehaviour {
 		
 		if (Input.GetButtonDown("L1 2"))
 		{
-			var tempPos = TeleportMarker.transform.position;
-			
-			TeleportMarker.transform.position = transform.position;
-			
-			transform.position = tempPos;
-			
-			
-			//forward flash
-			//transform.position += transform.right * teleportDistance;
-			
+			Teleport();
 			Debug.Log("L1 2, teleport");
 		}
 		
+		UpdateMovement(rotation, acceleration);
 		
-		
-		
-		_rotation -= rotation * rotationForce;
-		
-		if (_rotation > 360.0f)
-			_rotation -= 360.0f;
-		
-		if (_rotation < -360.0f)
-			_rotation += 360.0f; 
-		
-		rigidbody2D.MoveRotation(_rotation);
-		TeleportMarker.rigidbody2D.MoveRotation(_rotation);
-		
-		//rigidbody2D.AddTorque(-rotation * rotationForce);
-		rigidbody2D.AddForce(transform.right * acceleration * accelerationForce);
-		
-		
-		if (rigidbody2D.velocity.x > maxSpeed)
-		{
-			rigidbody2D.velocity = new Vector2(maxSpeed, rigidbody2D.velocity.y);
-		}
-		
-		if (rigidbody2D.velocity.y > maxSpeed)
-		{
-			rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, maxSpeed);
-		}
 		
 		
 		//Input.GetAxis(
